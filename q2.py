@@ -33,9 +33,8 @@ def cut_audio(in_path: str, out_path: str, start: float, end: float) -> None:
       start: Indicates the start of the sequence (in seconds)
       end: Indicates the end of the sequence (in seconds)
     """
-    audio_input = ffmpeg.input(in_path)
-    audio_cut = audio_input.filter_('atrim', start = start, end = end)
-    audio_output = ffmpeg.output(audio_cut, out_path)
-    ffmpeg.run(audio_output)
-
+    try:
+        ffmpeg.input(in_path).filter('atrim', start=start, end=end).output(out_path).run(overwrite_output=True)
+    except ffmpeg.Error as e:
+        print(f"Error cutting audio: {e}")
     return None
